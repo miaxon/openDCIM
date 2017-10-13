@@ -91,4 +91,5 @@ return array(
     'pdf_context' => $vendorDir . '/setasign/fpdi/pdf_context.php',
     'tocontents' => $vendorDir . '/mpdf/mpdf/classes/tocontents.php',
     'wmf' => $vendorDir . '/mpdf/mpdf/classes/wmf.php',
+	'ApplicationVersion' => $baseDir . '/classes/ApplicationVersion.inc.php'
 );
