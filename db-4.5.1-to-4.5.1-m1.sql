@@ -44,4 +44,4 @@ INSERT INTO fac_DeviceTypes (Type) VALUES
 -- Bump up the database version (uncomment below once released)
 --
 
-UPDATE fac_Config set Value="4.5-m1" WHERE Parameter="Version";
+UPDATE fac_Config set Value="4.5.1-m1" WHERE Parameter="Version";
