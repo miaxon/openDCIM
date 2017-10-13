@@ -16,17 +16,20 @@
 
 	function MarkUsed($dev,&$cabarray){
 		$i=$dev->Height;
-
+	
 		while($i>0){
 			$i--;
 			if($cabarray[0]=='Bottom'){
-				$u=$dev->Position+$i;
+				if($dev->Position > 0)
+					$u=$dev->Position+$i;
+				else
+					$u= $dev->Position-$i;
 			}else{
 				// upside down racks need to go the other direction
 				$u=$dev->Position-$i;
 			}
 			//constraight the rack usage to just what is a valid rack position
-			if($u<=max(array_keys($cabarray)) && $u>=1){
+			if($u<=max(array_keys($cabarray)) && $u>=-3){
 				$cabarray[$u]=true;
 			}
 		}
@@ -35,11 +38,11 @@
 	// Fill in rack positions for true/false checks
 	$cabinetuse=array();
 	$i=$cab->CabinetHeight;
-	while($i>0){
+	while($i>=-3){
 		$cabinetuse[$i]=false;
 		$i--;
 	}
-
+	
 	// Add in the rack orientation
 	$cabinetuse[0]=$cab->U1Position;
  

@@ -120,6 +120,7 @@
     try {
       $inFileType = PHPExcel_IOFactory::identify($targetFile);
       $objReader = PHPExcel_IOFactory::createReader($inFileType);
+      $objReader->setReadDataOnly(true);
       $objXL = $objReader->load($targetFile);
     } catch (Exception $e) {
       die("Error opening file: ".$e->getMessage());
@@ -132,7 +133,7 @@
     // we do any actual inserts into the database
 
     $sheet = $objXL->getSheet(0);
-    $highestRow = $sheet->getHighestRow();
+    $highestRow = $sheet->getHighestRow("A");
 
     $content = "<h3>" . __("The following required fields are not mapped") . ":</h3><ul>";
 
@@ -162,7 +163,8 @@
           }
         }
 
-
+        if($row[$fname] == "")
+            continue;
         // Have to do this part by hand because some fields are actually context dependent upon others
         $values["DataCenterID"][] = $row["DataCenterID"];
         $tmpCab["DataCenterID"] = $row["DataCenterID"];
@@ -183,7 +185,7 @@
       foreach( $values as $key => $val ) {
         $values[$key] = array_unique( $values[$key], SORT_REGULAR );
       }
-      
+     
       if ( $valid ) {
         // This could probably be economized in some fashion, but I can just crank this out faster one at a time and worry about efficiency later
         //
@@ -334,7 +336,7 @@
     $errors = false;
 
     $sheet = $objXL->getSheet(0);
-    $highestRow = $sheet->getHighestRow();
+    $highestRow = $sheet->getHighestRow("A");
 
     // Also make sure we start with an empty string to display
     $content = "";

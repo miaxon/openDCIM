@@ -64,12 +64,14 @@ class VM {
 
 		$vmList=array();
 		$vmCount=0;
-
-		foreach($dbh->query($sql) as $row){
-			$vmList[$vmCount]=VM::RowToObject($row);
-			$vmCount++;
+		$result = $dbh->query($sql);
+		if($result->rowCount > 0)
+		{
+			foreach($result as $row){
+				$vmList[$vmCount]=VM::RowToObject($row);
+				$vmCount++;
+			}
 		}
-
 		return $vmList;
 	}
  

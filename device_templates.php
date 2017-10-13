@@ -1,7 +1,6 @@
 <?php
 	require_once('db.inc.php');
 	require_once('facilities.inc.php');
-
 	$subheader=__("Data Center Device Templates");
 
 	$timestamp=time();
@@ -753,11 +752,11 @@ echo '    </select>
 <div>
    <div><label for="DeviceType">',__("Device Type"),'</label></div>
    <div><select name="DeviceType" id="DeviceType">';
-
-	foreach(array('Server','Appliance','Storage Array','Switch','Chassis','Patch Panel','Physical Infrastructure','CDU','Sensor') as $DevType){
-		if($DevType==$template->DeviceType){$selected=" selected";}else{$selected="";}
-		print "		<option value=\"$DevType\"$selected>$DevType</option>\n";
-	}
+	
+        foreach( DeviceType::getTypeNames() as $typeRow){
+                $selected=($typeRow==$template->DeviceType)?" selected":"";
+                print "<option value=\"$typeRow\"$selected>" . __($typeRow) . "</option>\n";
+        }
 
 echo '	</select>
    </div>

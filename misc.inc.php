@@ -916,7 +916,6 @@ if ( $person->WriteAccess ) {
 	$wamenu[__("Template Management")][]='<a href="image_management.php#pictures"><span>'.__("Device Image Management").'</span></a>';
 }
 if ($person->BulkOperations) {
-	$wamenu[__("Bulk Importer")][]='<a href="bulk_container.php"><span>'.__("Import Container/Datacenter/Zone/Row").'</span></a>';
 	$wamenu[__("Bulk Importer")][]='<a href="bulk_cabinet.php"><span>'.__("Import New Cabinets").'</span></a>';
 	$wamenu[__("Bulk Importer")][]='<a href="bulk_importer.php"><span>'.__("Import New Devices").'</span></a>';
 	$wamenu[__("Bulk Importer")][]='<a href="bulk_network.php"><span>'.__("Import Network Connections").'</span></a>';
@@ -1021,7 +1020,7 @@ function BuildCabinet($cabid,$face="front"){
 	}
 	if($order){
 		$top=max($cab->CabinetHeight,$bounds['max']['position']+$bounds['max']['height']-1);
-		$bottom=min(0,$bounds['min']['position']);
+		$bottom=min(-3,$bounds['min']['position']);
 	}else{
 		// Reverse order
 		$top=min(1,$bounds['min']['position']-$bounds['min']['height']);
@@ -1043,7 +1042,8 @@ function BuildCabinet($cabid,$face="front"){
 	// helper function to print the rows of the cabinet table
 	if(!function_exists("printrow")){
 		function printrow($i,$top,$bottom,$order,$face,&$htmlcab,$cabobject){
-			$error=($i>$cabobject->CabinetHeight || ($i<=0 && $order)  || ($i<0 && !$order))?' error':'';
+			//$error=($i>$cabobject->CabinetHeight || ($i<=0 && $order)  || ($i<0 && !$order))?' error':'';
+			$error=($i>$cabobject->CabinetHeight || ($i<-3 && $order)  || ($i<0 && !$order))?' error':'';
 			if($order){
 				$x=($i<=0)?$i-1:$i;
 			}else{
@@ -1077,7 +1077,7 @@ function BuildCabinet($cabid,$face="front"){
 	// loop here for the height
 	// numbered high to low, top to bottom
 	if($order){
-		for($i=$top;$i>$bottom;$i--){
+		for($i=$top;$i>-3;$i--){
 			printrow($i,$top,$bottom,$order,$face,$htmlcab,$cab);
 		}
 	}else{ // numbered low to high, top to bottom

@@ -1,7 +1,7 @@
 <?php
 	require_once( 'db.inc.php' );
 	require_once( 'facilities.inc.php' );
-
+	
 	$subheader=__("Data Center Device Detail");
 
 	$dev=new Device();
@@ -167,7 +167,7 @@
 						// patch panels make everything more complicated
 						if($portid >0){
 							$portnames[$portid]=$ports[($pc-(abs($portid)-1))]->Label;
-							if($dev->DeviceType=="PatchPanel"){
+							if($dev->DeviceType=="Patch Panel"){
 								$portnames[($portid*-1)]=$ports[($pc-(abs($portid)-1))]->Label;
 							}
 						}
@@ -811,30 +811,10 @@
 
 	// We don't want someone accidentally adding a chassis device inside of a chassis slot.
 	if($dev->ParentDevice>0){
-		$devarray=array('Server' => __("Server"),
-						'Appliance' => __("Appliance"),
-						'Storage Array' => __("Storage Array"),
-						'Switch' => __("Switch"),
-						'Chassis' => __("Chassis"),
-						'Patch Panel' => __("Patch Panel"),
-						'Sensor' => __("Sensor"),
-						);
-
 		/* If you only have rear slots, don't make the user click Backside, which they forget to do half the time, anyway */
 		if ( $pDev->ChassisSlots < 1 && $pDev->RearChassisSlots > 0 ) {
 			$dev->BackSide = 1;
 		}
-	}else{
-		$devarray=array('Server' => __("Server"),
-						'Appliance' => __("Appliance"),
-						'Storage Array' => __("Storage Array"),
-						'Switch' => __("Switch"),
-						'Chassis' => __("Chassis"),
-						'Patch Panel' => __("Patch Panel"),
-						'Physical Infrastructure' => __("Physical Infrastructure"),
-						'CDU' => __("CDU"),
-						'Sensor' => __("Sensor"),
-						);
 	}
 
 	if($config->ParameterArray["mDate"]=="now"){
@@ -860,9 +840,7 @@
 	$templ->TemplateID=$dev->TemplateID;
 	$templ->GetTemplateByID();
 
-	if ( $dev->DeviceID == 0 ) {
-		$dev->Status="Reserved";
-	}
+
 	
 	$title=($dev->Label!='')?"$dev->Label :: $dev->DeviceID":__("openDCIM Device Maintenance");
 
@@ -1513,8 +1491,9 @@ print "		var dialog=$('<div>').prop('title',\"".__("Verify Delete Device")."\").
 					}
 				}else{
 					// high to low
-					for(var ucount=Object.keys(data).length-1; ucount>=1; ucount--) {
-						parseusage(ucount);
+					for(var ucount=Object.keys(data).length-4; ucount>=-3; ucount--) {
+						if(ucount != 0)
+							parseusage(ucount);
 					}
 				}
 				var rackhtml='<div class="table border positionselector"><div><div>'+rackhtmlleft+'</div><div>'+rackhtmlright+'</div></div></div>';
@@ -1865,7 +1844,7 @@ echo '		</div>
 
 			foreach($templateList as $tempRow){
 				// $devarray is helping to remove invalid device templates from child devices
-				if(in_array($tempRow->DeviceType, array_keys($devarray))){
+				if(in_array($tempRow->DeviceType, DeviceType::getTypeNames())){
 					if($dev->TemplateID==$tempRow->TemplateID){$selected=" selected";}else{$selected="";}
 					$mfg->ManufacturerID=$tempRow->ManufacturerID;
 					$mfg->GetManufacturerByID();
@@ -1882,7 +1861,7 @@ echo '			</select>
 		</div>
 		<div>
 		   <div><label for="Position">',__("Position"),'</label></div>
-		   <div><input type="number" class="required,validate[custom[onlyNumberSp],min[0],max[',$cab->CabinetHeight,']]" name="Position" id="Position" value="',$dev->Position,'"></div>
+		   <div><input type="number" class="required,validate[custom[onlyNumberSp],min[-3],max[',$cab->CabinetHeight,']]" name="Position" id="Position" value="',$dev->Position,'"></div>
 		</div>
 		';
 
@@ -1935,10 +1914,10 @@ echo '		<div>
 		   <div><select name="DeviceType">
 			<option value=0>',__("Select..."),'</option>';
 
-		foreach($devarray as $devType => $translation){
-			if($devType==$dev->DeviceType){$selected=" selected";}else{$selected="";}
-			print "\t\t\t<option value=\"$devType\"$selected>$translation</option>\n";
-		}
+		foreach( DeviceType::getTypeNames() as $typeRow){
+                    $selected=($dev->DeviceType==$typeRow)?" selected":"";
+                    print "\t\t\t\t<option value=\"$typeRow\"$selected>" . __($typeRow) . "</option>\n";
+                }
 echo '
 		   </select></div>
 		</div>

@@ -110,8 +110,8 @@
                     "alertText": "* Invalid URL"
                 },
                 "onlyNumberSp": {
-                    "regex": /^[0-9\ ]+$/,
-                    "alertText": "* Numbers only"
+                    "regex": /^[\-\+]?[0-9\ ]+$/,
+                    "alertText": "* Numbers only fuck"
                 },
                 "onlyLetterSp": {
                     "regex": /^[a-zA-Z\ \']+$/,

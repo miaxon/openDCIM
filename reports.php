@@ -43,16 +43,17 @@ echo '<div class="main">
 	<a href="search_export.php">',__("Search/Export by Data Center"),'</a>
 	<a href="search_export_storage_room.php">',__("Storage Room Search/Export by Data Center"),'</a>
 	<a href="report_xml_CFD.php">',__("Export Data Center for CFD (XML)"),'</a>
-	<a href="report_contact.php">',__("Asset Report by Owner"),'</a>
-	<a href="report_asset.php">',__("Data Center Asset Report"),'</a>
+	<a href="report_contact.php">',__("Asset Report by Owner")." (PDF)",'</a>
+	<a href="report_asset.php">',__("Data Center Asset Report")." (PDF)",'</a>
     <a href="report_asset_Excel.php">',__("Data Center Asset Report [Excel]"),'</a>
-	<a href="report_cost.php">',__("Data Center Asset Costing Report"),'</a>
-	<a href="report_aging.php">',__("Asset Aging Report"),'</a>
-	<a href="report_projects.php">',__("Project Asset Report"),'</a>
-    <a href="report_warranty.php">',__("Warranty Expiration Report"),'</a>
-	<a href="report_vm_by_department.php">',__("Virtual Machines by Department"),'</a>
+	<a href="report_cost.php">',__("Data Center Asset Costing Report")." (PDF)",'</a>
+	<a href="report_aging.php">',__("Asset Aging Report")." (PDF)",'</a>
+	<a href="report_projects.php">',__("Project Asset Report")." (Excel)",'</a>
+        <a href="report-projects.php">',__("Project Asset Report"),'</a>
+    <a href="report_warranty.php">',__("Warranty Expiration Report")." (PDF)",'</a>
+	<a href="report_vm_by_department.php">',__("Virtual Machines by Department")." (PDF)",'</a>
 	<a href="report_network_map.php">',__("Network Map"),'</a>
-	<a href="report_vendor_model.php">', __("Vendor/Model Report"),'</a>
+	<a href="report_vendor_model.php">', __("Vendor/Model Report")." (Excel)",'</a>
 </fieldset>
 </div>
 

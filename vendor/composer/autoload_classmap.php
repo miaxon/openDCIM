@@ -30,6 +30,7 @@ return array(
     'DeviceCustomAttribute' => $baseDir . '/classes/DeviceCustomAttribute.class.php',
     'DevicePorts' => $baseDir . '/classes/DevicePorts.class.php',
     'DeviceStatus' => $baseDir . '/classes/DeviceStatus.inc.php',
+    'DeviceType' => $baseDir . '/classes/DeviceType.inc.php',
     'DeviceTemplate' => $baseDir . '/classes/DeviceTemplate.class.php',
     'Disposition' => $baseDir . '/classes/Disposition.class.php',
     'DispositionMembership' => $baseDir . '/classes/DispositionMembership.class.php',
