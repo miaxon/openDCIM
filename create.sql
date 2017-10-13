@@ -767,7 +767,7 @@ CREATE TABLE fac_Config (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO fac_Config VALUES
-  ('Version','4.5','','',''),
+  ('Version','4.5.1-m1','','',''),
 	('OrgName','openDCIM Computer Facilities','Name','string','openDCIM Computer Facilities'),
 	('ClassList','ITS, Internal, Customer','List','string','ITS, Internal, Customer'),
 	('SpaceRed','80','percentage','float','80'),
@@ -1003,3 +1003,45 @@ INSERT INTO fac_DeviceStatus (Status, ColorCode) VALUES ('QA', '#FFFFFF');
 INSERT INTO fac_DeviceStatus (Status, ColorCode) VALUES ('Production', '#FFFFFF');
 INSERT INTO fac_DeviceStatus (Status, ColorCode) VALUES ('Spare', '#FFFFFF');
 INSERT INTO fac_DeviceStatus (Status, ColorCode) VALUES ('Disposed', '#FFFFFF');
+
+--
+-- Add a table of DeviceType Field values to allow
+--
+
+CREATE TABLE fac_DeviceTypes (
+	TypeID INT(11) NOT NULL AUTO_INCREMENT,
+	Type varchar(23) NOT NULL,
+	PRIMARY KEY(TypeID)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
+INSERT INTO fac_DeviceTypes (Type) VALUES
+
+  ('Server'),
+  ('Appliance'),
+  ('Storage Array'),
+  ('Chassis'),
+  ('Patch Panel'),
+  ('Physical Infrastructure'),
+  ('Sensor'),
+  ('Load Balancer'),
+  ('Switch'),
+  ('Serial Switch'),
+  ('LAN Switch'),
+  ('FEX Switch'),
+  ('SAN Switch'),
+  ('Cluster Switch'),
+  ('Fabric Switch'),
+  ('Tape Library'),
+  ('Data Base Engine'),
+  ('Crypto Farm'),
+  ('Crypto Gateway'),
+  ('Router'),
+  ('Firewall'),
+  ('Optimization Manager'),
+  ('SAN'),
+  ('Workstation'),
+  ('Server HMC'),
+  ('IPS'),
+  ('JBOD'),
+  ('UCS'),
+  ('Gateway');
