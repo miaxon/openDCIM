@@ -1077,7 +1077,7 @@ $(document).ready(function() {
 			}
 		});
 		$('.left > fieldset ~ .table').each(function(){
-<?php print "			$(this).before($('<h3><a href=\"#\">".__("Notes")."</a></h3>'));"; ?>
+<?php print "			$(this).before($('<h3><a href=\"#\">".__("Marking")."</a></h3>'));"; ?>
 		});
 		$('.right').contents().appendTo($('.left'));
 <?php print "		$('.left').append('<h3><a href=\"#\">".__("Network & Power")."</a></h3>');"; ?>
@@ -1808,7 +1808,7 @@ echo '
 </fieldset>
 	<div class="table">
 		<div>
-		  <div><label for="Notes">',__("Notes"),'</label></div>
+		  <div><label for="Notes">',__("Marking"),'</label></div>
 		  <div><textarea name="Notes" id="Notes" cols="40" rows="8">',$dev->Notes,'</textarea></div>
 		</div>
 	</div> <!-- END div.table -->
@@ -2302,7 +2302,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 					<div id=\"ppcn\">".__("Port Name")."</div>
 					<div>".__("Device")."</div>
 					<div>".__("Device Port")."</div>
-					<div>".__("Notes")."</div>
+					<div>".__("Marking")."</div>
 <!--				<div>".__("Panel")."</div> -->
 				</div>\n";
 			foreach($pwrCords as $i => $cord){
@@ -2344,7 +2344,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 				<div id=\"spn\">".__("Port Name")."</div>
 				<div>".__("Device")."</div>
 				<div>".__("Device Port")."</div>
-				<div>".__("Notes")."</div>";
+				<div>".__("Marking")."</div>";
 		if($dev->DeviceType=='Switch'){print "\t\t\t\t<div id=\"st\">".__("Status")."</div>";}
 		print "\t\t\t\t<div id=\"mt\">".__("Media Type")."</div>
 			<div id=\"cc\">".__("Color Code")."</div>
@@ -2393,7 +2393,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 	}
 
 	if($dev->DeviceType=='Patch Panel'){
-		print "\n\t<div>\n\t\t<div><a name=\"net\">".__("Connections")."</a></div>\n\t\t<div>\n\t\t\t<div class=\"table border patchpanel\">\n\t\t\t\t<div><div>".__("Front")."</div><div>".__("Device Port")."</div><div>".__("Notes")."</div><div id=\"pp\">".__("Patch Port")."</div><div id=\"mt\">".__("Media Type")."</div><div id=\"rear\">".__("Back")."</div><div>".__("Device Port")."</div><div>".__("Notes")."</div></div>\n";
+		print "\n\t<div>\n\t\t<div><a name=\"net\">".__("Connections")."</a></div>\n\t\t<div>\n\t\t\t<div class=\"table border patchpanel\">\n\t\t\t\t<div><div>".__("Front")."</div><div>".__("Device Port")."</div><div>".__("Marking")."</div><div id=\"pp\">".__("Patch Port")."</div><div id=\"mt\">".__("Media Type")."</div><div id=\"rear\">".__("Back")."</div><div>".__("Device Port")."</div><div>".__("Marking")."</div></div>\n";
 		for($n=0; $n< sizeof($portList)/2; $n++){
 			$i = $n + 1;	// The "port number" starting at 1
 			$frontDev=new Device();
