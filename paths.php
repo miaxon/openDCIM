@@ -341,7 +341,7 @@
                                                 // Mark label table
                                                 $path.="<td>"; 
                                                 $path.="<table>"; 
-                                                $path.="<tr><td>"._("Marking").":</td></tr>";
+                                                $path.="<tr><td>".Label:</td></tr>";
                                                 $path.="<tr><td>$dp->Notes</td></tr>"; 
                                                 $path.="</table>"; 
                                                 $path.="</td>"; 

@@ -1077,7 +1077,7 @@ $(document).ready(function() {
 			}
 		});
 		$('.left > fieldset ~ .table').each(function(){
-<?php print "			$(this).before($('<h3><a href=\"#\">".__("Marking")."</a></h3>'));"; ?>
+<?php print "			$(this).before($('<h3><a href=\"#\">".__("Notes")."</a></h3>'));"; ?>
 		});
 		$('.right').contents().appendTo($('.left'));
 <?php print "		$('.left').append('<h3><a href=\"#\">".__("Network & Power")."</a></h3>');"; ?>
@@ -1808,7 +1808,7 @@ echo '
 </fieldset>
 	<div class="table">
 		<div>
-		  <div><label for="Notes">',__("Marking"),'</label></div>
+		  <div><label for="Notes">',__("Notes"),'</label></div>
 		  <div><textarea name="Notes" id="Notes" cols="40" rows="8">',$dev->Notes,'</textarea></div>
 		</div>
 	</div> <!-- END div.table -->
@@ -2302,7 +2302,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 					<div id=\"ppcn\">".__("Port Name")."</div>
 					<div>".__("Device")."</div>
 					<div>".__("Device Port")."</div>
-					<div>".__("Marking")."</div>
+					<div>".__("Notes")."</div>
 <!--				<div>".__("Panel")."</div> -->
 				</div>\n";
 			foreach($pwrCords as $i => $cord){
@@ -2344,7 +2344,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 				<div id=\"spn\">".__("Port Name")."</div>
 				<div>".__("Device")."</div>
 				<div>".__("Device Port")."</div>
-				<div>".__("Marking")."</div>";
+				<div>".__("Notes")."</div>";
 		if($dev->DeviceType=='Switch'){print "\t\t\t\t<div id=\"st\">".__("Status")."</div>";}
 		print "\t\t\t\t<div id=\"mt\">".__("Media Type")."</div>
 			<div id=\"cc\">".__("Color Code")."</div>
@@ -2382,7 +2382,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 					<div id=\"sp$i\">$i</div>
 					<div id=\"spn$i\">$port->Label</div>
 					<div id=\"d$i\" data-default=$port->ConnectedDeviceID><a href=\"devices.php?DeviceID=$port->ConnectedDeviceID\">$tmpDev->Label</a></div>
-					<div id=\"dp$i\" data-default=$port->ConnectedPort><a href=\"paths.php?deviceid=$port->ConnectedDeviceID&portnumber=$port->ConnectedPort\">$cp->Label</a></div>
+					<div id=\"dp$i\" data-default=$port->ConnectedPort><a href=\"paths.php?deviceid=$port->ConnectedDeviceID&portnumber=$port->ConnectedPort&portnotes=$port->Notes\">$cp->Label</a></div>
 					<div id=\"n$i\" data-default=\"$port->Notes\">$port->Notes</div>";
 			if($dev->DeviceType=='Switch'){print "\t\t\t\t<div id=\"st$i\"><span class=\"ui-icon status {$linkList[$i]}\"></span></div>";}
 			print "\t\t\t\t<div id=\"mt$i\" data-default=$port->MediaID>$mt</div>
@@ -2393,7 +2393,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 	}
 
 	if($dev->DeviceType=='Patch Panel'){
-		print "\n\t<div>\n\t\t<div><a name=\"net\">".__("Connections")."</a></div>\n\t\t<div>\n\t\t\t<div class=\"table border patchpanel\">\n\t\t\t\t<div><div>".__("Front")."</div><div>".__("Device Port")."</div><div>".__("Marking")."</div><div id=\"pp\">".__("Patch Port")."</div><div id=\"mt\">".__("Media Type")."</div><div id=\"rear\">".__("Back")."</div><div>".__("Device Port")."</div><div>".__("Marking")."</div></div>\n";
+		print "\n\t<div>\n\t\t<div><a name=\"net\">".__("Connections")."</a></div>\n\t\t<div>\n\t\t\t<div class=\"table border patchpanel\">\n\t\t\t\t<div><div>".__("Front")."</div><div>".__("Device Port")."</div><div>".__("Notes")."</div><div id=\"pp\">".__("Patch Port")."</div><div id=\"mt\">".__("Media Type")."</div><div id=\"rear\">".__("Back")."</div><div>".__("Device Port")."</div><div>".__("Notes")."</div></div>\n";
 		for($n=0; $n< sizeof($portList)/2; $n++){
 			$i = $n + 1;	// The "port number" starting at 1
 			$frontDev=new Device();
@@ -2434,12 +2434,12 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 			$portList[$i]->Label=($portList[$i]->Label=='')?$i:$portList[$i]->Label;
 			print "\n\t\t\t\t<div data-port=$i>
 					<div id=\"fd$i\" data-default=$frontDev->DeviceID><a href=\"devices.php?DeviceID=$frontDev->DeviceID\">$frontDev->Label</a></div>
-					<div id=\"fp$i\" data-default={$portList[$i]->ConnectedPort}><a href=\"paths.php?deviceid=$frontDev->DeviceID&portnumber={$portList[$i]->ConnectedPort}\">$fp</a></div>
+					<div id=\"fp$i\" data-default={$portList[$i]->ConnectedPort}><a href=\"paths.php?deviceid=$frontDev->DeviceID&portnumber={$portList[$i]->ConnectedPort}&portnotes={$portList[$i]->Notes}\">$fp</a></div>
 					<div id=\"fn$i\" data-default=\"{$portList[$i]->Notes}\">{$portList[$i]->Notes}</div>
 					<div id=\"pp$i\">{$portList[$i]->Label}</div>
 					<div id=\"mt$i\" data-default={$portList[$i]->MediaID} data-color={$portList[$i]->ColorID}>$mt</div>
 					<div id=\"rd$i\" data-default=$rearDev->DeviceID><a href=\"devices.php?DeviceID=$rearDev->DeviceID\">$rearDev->Label</a></div>
-					<div id=\"rp$i\" data-default={$portList[-$i]->ConnectedPort}><a href=\"paths.php?deviceid=$rearDev->DeviceID&portnumber={$portList[-$i]->ConnectedPort}\">$rp</a></div>
+					<div id=\"rp$i\" data-default={$portList[-$i]->ConnectedPort}><a href=\"paths.php?deviceid=$rearDev->DeviceID&portnumber={$portList[-$i]->ConnectedPort}&portnotes={$portList[-$i]->Notes}\">$rp</a></div>
 					<div id=\"rn$i\" data-default=\"{$portList[-$i]->Notes}\">{$portList[-$i]->Notes}</div>
 				</div>";
 		}
