@@ -1085,12 +1085,10 @@ table#parcheos td {padding: 0px; border: 0px; vertical-align: top;}
 #parcheos .connection-f-1 {background: url("../images/b1f.png") no-repeat #FFF;}
 #parcheos .connection-f-2 {background: url("../images/b2f.png") no-repeat #FFF; width:25px;}
 #parcheos .connection-f-3 {background: url("../images/b3f.png") no-repeat #FFF; height:30px;}
-#parcheos .connection-f-3i {background: url("../images/b3f.png") no-repeat center #FFF; height:25px; width:40px;}
 #parcheos .connection-f-4 {background: url("../images/b4f.png") no-repeat top right #FFF; height:30px;}
 #parcheos .connection-r-1 {background: url("../images/b1r.png") no-repeat #FFF;}
 #parcheos .connection-r-2 {background: url("../images/b2r.png") no-repeat #FFF;}
 #parcheos .connection-r-3 {background: url("../images/b3r.png") no-repeat #FFF; height:30px;}
-#parcheos .connection-r-3i {background: url("../images/b3r.png") no-repeat center #FFF; height:25px; width:40px;}
 #parcheos .connection-r-4 {background: url("../images/b4r.png") no-repeat top right #FFF; height:30px;}
 
 table#parcheos table tr + tr > td + td{background-color:yellow;}

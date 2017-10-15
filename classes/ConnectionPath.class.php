@@ -33,7 +33,7 @@ class ConnectionPath {
 	
 	var $DeviceID;
 	var $PortNumber; //The sign of PortNumber indicate if the path continue by front port (>0) or rear port (<0)
-	var $Notes; // The mark label of the Path
+	
 	private $PathAux; //loops control
 	
 	function MakeSafe(){

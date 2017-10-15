@@ -77,6 +77,7 @@
 			
 			$cp->DeviceID=intval($_REQUEST['deviceid']);
 			$cp->PortNumber=intval($_REQUEST['portnumber']);
+                        $cp->Notes = $_REQUEST['portnotes'];
 			$cp->DeviceType=$dev->DeviceType;
 			$cp->Front=true;
 				
@@ -104,6 +105,7 @@
 				$cp=new ConnectionPath();
 				$cp->DeviceID=intval($_POST['devid']);
 				$cp->PortNumber=intval($_POST['port']);
+                                $cp->Notes = "bbbb";
 				//label of devid
 				$label=$devList[$cp->DeviceID]->Label;
 				//search the begining of the path
@@ -124,6 +126,7 @@
 					$keys=array_keys($devList);
 					$cp->DeviceID=$keys[0];
 					$cp->PortNumber=intval($_POST['port']);
+                                        $cp->Notes = "aaaaaaaaa";
 					//label of devid
 					$label=$devList[$cp->DeviceID]->Label;
 					
@@ -179,7 +182,7 @@
 			$path.="<div style=\"font-size: 1.5em;\">".__("Path of")." $pathid</div>";
 
 			//Path Table
-			$path.="<table id=\"parcheos\"><tr><td colspan=6/></tr><tr>";
+			$path.="<table id=\"parcheos\"><tr><td colspan=7/></tr><tr>";
 			$path.="<td/><td class=\"right\">";
 			
 			$dev=new Device();
@@ -266,16 +269,19 @@
 					//ending row
 					$path.="</td><td></td></tr>";
                                         
-					//connection for next row
-					$conex="<td class=\"connection-$tipo_con-3\"></td>";
-					$conex.="<td class=\"connection-$tipo_con-2\"></td><td/></tr>";
+					//connection for next row					
 					if ($cp->GotoNextDevice()) {
 						$tipo_con=($cp->PortNumber>0)?"r":"f";  //In connection type
-
 						//row separation between patch rows: draw the connection between panels
-						$path.="<tr><td/><td class=\"connection-$tipo_con-4\"></td>"; 
-						//$path.="<td class=\"connection-$tipo_con-3i\"></td>";
-						$path.=$conex;
+						$path.="<tr>";
+                                                $path.="<td/>";
+                                                $path.="<td class=\"connection-$tipo_con-4\"/>";
+                                                $path.="<td class=\"connection-$tipo_con-3\"/>";  
+                                                $path.="<td/>";  
+                                                $path.="<td class=\"connection-$tipo_con-3\"/>";  
+                                                $path.="<td class=\"connection-$tipo_con-2\"/>";  
+                                                $path.="<td/>"; 
+                                                $path.="</tr>";
 						$path.="<tr><td/><td>";
 					} else {
 						//End of path
@@ -298,7 +304,6 @@
 					$path.="</th></tr><tr><td>U:{$devList[sizeof($devList)]->Position}</td>";
 					
 					//Lineage
-					$t=5;
 					for ($i=sizeof($devList); $i>1; $i--){
 						$path.="<td>";
 						$path.="<table>";
@@ -333,15 +338,19 @@
 						//Out connection type
 						$tipo_con=($cp->PortNumber>0)?"f":"r";						
 						$path.="<td class=\"$tipo_con-left\"/>";
-                                                //$path.="<td class=\"connection-$tipo_con-3i\"/>";
-                                                //$path.="<td class=\"connection-$tipo_con-3i\"/>";
+                                                // Mark label table
+                                                $path.="<td>"; 
+                                                $path.="<table>"; 
+                                                $path.="<tr><td>Label:</td></tr>";
+                                                $path.="<tr><td>$dp->Notes</td></tr>"; 
+                                                $path.="</table>"; 
+                                                $path.="</td>"; 
 					}
 					//next device, if exist
 					if ($cp->GotoNextDevice()) {
 						$elem_path++;
 						$form_eliminar.="<input type=\"hidden\" name=\"DeviceID[$elem_path]\" value=\"$cp->DeviceID\">";
-						$form_eliminar.="<input type=\"hidden\" name=\"PortNumber[$elem_path]\" value=\"$cp->PortNumber\">";
-						
+						$form_eliminar.="<input type=\"hidden\" name=\"PortNumber[$elem_path]\" value=\"$cp->PortNumber\">";						
 						$dev->DeviceID=$cp->DeviceID;
 						$dev->GetDevice();
 						
@@ -349,7 +358,7 @@
 						$tipo_con=($cp->PortNumber>0)?"r":"f";
 						
 						//half hose
-						$path.="<td class=\"$tipo_con-right\"></td>";
+						$path.="<td class=\"$tipo_con-right\"/>";                                               
 						
 						//Out connection type
 						$tipo_con=($cp->PortNumber>0)?"f":"r";
@@ -358,11 +367,10 @@
 						if ($dev->DeviceType=="Patch Panel"){
 							$path.="<td class=\"connection-$tipo_con-1\">";
 							// I prepare row separation between patch rows
-							//$conex="<td class=\"connection-$tipo_con-3i\"/>";
-							$conex.="<td class=\"connection-$tipo_con-2\"/><td/></tr>";
+							$conex.="<td/><td/><td class=\"connection-$tipo_con-2\"/><td/></tr>";
 						}
 						else{
-							$conex="<td/><td/><td/></tr>";
+							$conex="<td/><td/><td/><td/></tr>";
 							$path.="<td>";
 						}
 					
@@ -414,17 +422,19 @@
 						$path.="</table>";
 						
 						//ending row
-						$path.="</td><td/></tr>\n";
-	
+						$path.="</td><td/></tr>\n";	
 						if ($cp->GotoNextDevice()) {
-							$tipo_con=($cp->PortNumber>0)?"r":"f";  //In connection type
-	
+							$tipo_con=($cp->PortNumber>0)?"r":"f";  //In connection type	
 							//row separation between patch rows: draw the connection between panels
-							$path.="<tr><td/><td class=\"connection-$tipo_con-4\"/>"; 
-							$path.="<td class=\"connection-$tipo_con-3\"/>";
-                                                        //$path.="<td class=\"connection-$tipo_con-3i\"/>";
-                                                        //$path.="<td class=\"connection-$tipo_con-3i\"/>";
-							$path.=$conex;
+							$path.="<tr>";
+                                                $path.="<td/>";
+                                                $path.="<td class=\"connection-$tipo_con-4\"/>";
+                                                $path.="<td class=\"connection-$tipo_con-3\"/>";  
+                                                $path.="<td/>";  
+                                                $path.="<td class=\"connection-$tipo_con-3\"/>";  
+                                                $path.="<td class=\"connection-$tipo_con-2\"/>";  
+                                                $path.="<td/>"; 
+                                                $path.="</tr>";							
 							$path.="<tr><td/><td>";
 						} else {
 							//End of path
@@ -434,24 +444,24 @@
 						}
 					}else {
 						//End of path
-						$path.="<tdcolspan=6/></tr>\n";
+						$path.="<td colspan=7/></tr>\n";
 						$end=true;
 					}
 				}
 			}
 			//key
-			$path.="<tr><td colspan=6/></tr>";
+			$path.="<tr><td colspan=7/></tr>";
 			$path.="<tr>";
 			$path.="<td class=\"right\" colspan=2><img src=\"images/leyendaf.png\" alt=\"\"></td>";
-			$path.="<td class=\"left\" colspan=6>&nbsp;&nbsp;".__("Front Connection")."</td>";
+			$path.="<td class=\"left\" colspan=5>&nbsp;&nbsp;".__("Front Connection")."</td>";
 			$path.="</tr>";
 			$path.="<tr>";
 			$path.="<td class=\"right\" colspan=2><img src=\"images/leyendar.png\" alt=\"\"></td>";
-			$path.="<td class=\"left\" colspan=6>&nbsp;&nbsp;".__("Rear Connection")."</td>";
+			$path.="<td class=\"left\" colspan=5>&nbsp;&nbsp;".__("Rear Connection")."</td>";
 			$path.="</tr>";
 			
 			//End of path table
-			$path.="<tr><td colspan=6></tr></table></div>";
+			$path.="<tr><td colspan=7></tr></table></div>";
 		
 			// need to add an additional check for permission here if they can write
 			if(!isset($_GET['pathonly'])){
