@@ -277,7 +277,7 @@
                                                 $path.="<td/>";
                                                 $path.="<td class=\"connection-$tipo_con-4\"/>";
                                                 $path.="<td class=\"connection-$tipo_con-3\"/>";  
-                                                $path.="<td/>";  
+                                                $path.="<td class=\"connection-$tipo_con-3i\"/>";  
                                                 $path.="<td class=\"connection-$tipo_con-3\"/>";  
                                                 $path.="<td class=\"connection-$tipo_con-2\"/>";  
                                                 $path.="<td/>"; 
@@ -430,7 +430,7 @@
                                                 $path.="<td/>";
                                                 $path.="<td class=\"connection-$tipo_con-4\"/>";
                                                 $path.="<td class=\"connection-$tipo_con-3\"/>";  
-                                                $path.="<td/>";  
+                                                $path.="<td class=\"connection-$tipo_con-3i\"/>";  
                                                 $path.="<td class=\"connection-$tipo_con-3\"/>";  
                                                 $path.="<td class=\"connection-$tipo_con-2\"/>";  
                                                 $path.="<td/>"; 

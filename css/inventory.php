@@ -1089,6 +1089,7 @@ table#parcheos td {padding: 0px; border: 0px; vertical-align: top;}
 #parcheos .connection-r-1 {background: url("../images/b1r.png") no-repeat #FFF;}
 #parcheos .connection-r-2 {background: url("../images/b2r.png") no-repeat #FFF;}
 #parcheos .connection-r-3 {background: url("../images/b3r.png") no-repeat #FFF; height:30px;}
+#parcheos .connection-r-3i {background: url("../images/b3r.png") repeat #FFF; height:30px;}
 #parcheos .connection-r-4 {background: url("../images/b4r.png") no-repeat top right #FFF; height:30px;}
 
 table#parcheos table tr + tr > td + td{background-color:yellow;}
