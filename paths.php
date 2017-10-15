@@ -163,7 +163,7 @@
 				$cp=new ConnectionPath();
 				$cp->DeviceID=$row["DeviceID"];
 				$cp->PortNumber=$row["PortNumber"];
-				
+				$cp->Notes = $pathid;
 				if (!$cp->GotoHeadDevice()){
 					$status="<blink>".__("There is a loop in this port")."</blink>";
 				} 
@@ -176,11 +176,11 @@
 		if ($status==""){
 			
 			$path.="<div style=\"text-align: center;\">";
-			$path.="<div style=\"font-size: 1.5em;\">".__("Path of")." $pathid</div>\n";
+			$path.="<div style=\"font-size: 1.5em;\">".__("Path of")." $pathid</div>";
 
 			//Path Table
-			$path.="<table id=\"parcheos\">\n\t<tr>\n\t\t<td colspan=6>&nbsp;</td>\n\t</tr>\n\t<tr>\n";
-			$path.="\t\t<td>&nbsp;&nbsp;&nbsp;</td>\n\t\t<td class=\"right\">";
+			$path.="<table id=\"parcheos\"><tr><td colspan=6/></tr><tr>";
+			$path.="<td/><td class=\"right\">";
 			
 			$dev=new Device();
 			$end=false;
@@ -193,27 +193,27 @@
 				$dev->DeviceID=$cp->DeviceID;
 				$dev->GetDevice();
 				$elem_path++;
-				$form_eliminar.="<input type=\"hidden\" name=\"DeviceID[$elem_path]\" value=\"$cp->DeviceID\">\n";
-				$form_eliminar.="<input type=\"hidden\" name=\"PortNumber[$elem_path]\" value=\"$cp->PortNumber\">\n";
+				$form_eliminar.="<input type=\"hidden\" name=\"DeviceID[$elem_path]\" value=\"$cp->DeviceID\">";
+				$form_eliminar.="<input type=\"hidden\" name=\"PortNumber[$elem_path]\" value=\"$cp->PortNumber\">";
 				
 				//If this device is the first and is a panel, I put it to the right position freeing the left
 				if ($elem_path==1 && $dev->DeviceType=="Patch Panel"){
-					$path.="</td>\n\t\t<td></td>";
+					$path.="</td><td/>";
 					
 					//In connection type
 					$tipo_con=($cp->PortNumber>0)?"r":"f";
 					
 					//half hose
-					$path.="\n\t\t<td class=\"$tipo_con-right\"></td>\n";
+					$path.="<td class=\"$tipo_con-right\"/>";
 					
 					//Out connection type
 					$tipo_con=($cp->PortNumber>0)?"f":"r";
 					
 					//Can the path continue?
 					if ($dev->DeviceType=="Patch Panel"){
-						$path.="\n\t\t<td class=\"connection-$tipo_con-1\">";
+						$path.="<td class=\"connection-$tipo_con-1\">";
 					}else{
-						$path.="\n\t\t<td>";
+						$path.="<td>";
 					}
 				
 					//I get device Lineage (for multi level chassis)
@@ -221,28 +221,25 @@
 					$devList=$dev->GetDeviceLineage();
 					
 					//Device table
-					$path.="\n\t\t\t<table>\n\t\t\t\t<tr>\n\t\t\t\t\t<th colspan=2>";
-					
-					//Cabinet
+                                        //Cabinet
 					$cab=new Cabinet();
 					$cab->CabinetID=$devList[sizeof($devList)]->Cabinet;
 					$cab->GetCabinet();
+					$path.="<table><tr><th colspan=2>";
 					$path.=__("Cabinet").": <a href=\"cabnavigator.php?cabinetid=$cab->CabinetID\">$cab->Location</a>";
-					$path.="</th>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td>U:{$devList[sizeof($devList)]->Position}</td>\n";
-					
+					$path.="</th></tr><tr><td>U:{$devList[sizeof($devList)]->Position}</td>";					
 					
 					//Lineage
-					$t=5;
 					for ($i=sizeof($devList); $i>1; $i--){
-						$path.=str_repeat("\t",$t++)."<td>\n";
-						$path.=str_repeat("\t",$t++)."<table>\n";
-						$path.=str_repeat("\t",$t++)."<tr>\n";
-						$path.=str_repeat("\t",$t--)."<th colspan=2>";
+						$path.="<td>";
+						$path.="<table>";
+						$path.="<tr>";
+						$path.="<th colspan=2>";
 						$path.="<a href=\"devices.php?DeviceID={$devList[$i]->DeviceID}\">{$devList[$i]->Label}</a>";
-						$path.="</th>\n";
-						$path.=str_repeat("\t",$t)."</tr>\n";
-						$path.=str_repeat("\t",$t++)."<tr>\n";
-						$path.=str_repeat("\t",$t)."<td>Slot:{$devList[$i-1]->Position}</td>\n";
+						$path.="</th>";
+						$path.="</tr>";
+						$path.="<tr>";
+						$path.="<td>Slot:{$devList[$i-1]->Position}</td>";
 					}
 					
 					//device
@@ -250,40 +247,36 @@
 					$dp->PortNumber=abs($cp->PortNumber);
 					$dp->getPort();
 					$label=($dp->Label!='')?$dp->Label:abs($cp->PortNumber);
-					$path.=str_repeat("\t",$t--)."<td>".
-							"<a href=\"devices.php?DeviceID=$dev->DeviceID\">$dev->Label</a>
-							<br>".__("Port").": $label</td>\n";
-					$path.=str_repeat("\t",$t--)."</tr>\n";
+					$path.="<td><a href=\"devices.php?DeviceID=$dev->DeviceID\">$dev->Label</a><br>".__("Port").": $label</td>";
+					$path.="</tr>";
 					
 					//Ending device table
 					for ($i=sizeof($devList); $i>1; $i--){
-						$path.=str_repeat("\t",$t--)."</table>\n";
-						$path.=str_repeat("\t",$t--)."</td>\n";
-						$path.=str_repeat("\t",$t--)."</tr>\n";
+						$path.="</table>";
+						$path.="</td>";
+						$path.="</tr>";
 					}
 					if ($cp->PortNumber>0){
-						$t++;
-						$path.=str_repeat("\t",$t++)."<tr>\n";
-						$path.=str_repeat("\t",$t)."<td colspan=2 class=\"base-f\">\n";
-						$path.=str_repeat("\t",$t--)."</td>\n";
-						$path.=str_repeat("\t",$t--)."</tr>\n";
+						$path.="<tr>";
+						$path.="<td colspan=2 class=\"base-f\"/>";
+						$path.="</tr>";
 					}
-					$path.=str_repeat("\t",$t--)."</table>\n";
-					
+					$path.="</table>";	
+                                        
 					//ending row
-					$path.="\t\t</td>\n\t\t<td>&nbsp;&nbsp;&nbsp;</td>\n\t</tr>\n";
-
+					$path.="</td><td></td></tr>";
+                                        
 					//connection for next row
-					$conex="\t\t<td class=\"connection-$tipo_con-3\">&nbsp;</td>\n";
-					$conex.="\t\t<td class=\"connection-$tipo_con-2\">&nbsp;</td>\n\t<td></td></tr>\n";
+					$conex="<td class=\"connection-$tipo_con-3\"></td>";
+					$conex.="<td class=\"connection-$tipo_con-2\"></td><td/></tr>";
 					if ($cp->GotoNextDevice()) {
 						$tipo_con=($cp->PortNumber>0)?"r":"f";  //In connection type
 
 						//row separation between patch rows: draw the connection between panels
-						$path.="\t<tr>\n\t\t<td></td><td class=\"connection-$tipo_con-4\">&nbsp;</td>\n"; 
-						$path.="\t\t<td class=\"connection-$tipo_con-3\">&nbsp;</td>\n";
+						$path.="<tr><td/><td class=\"connection-$tipo_con-4\"></td>"; 
+						//$path.="<td class=\"connection-$tipo_con-3i\"></td>";
 						$path.=$conex;
-						$path.="\n<tr>\n\t\t<td>&nbsp;&nbsp;&nbsp;</td>\n\t\t<td>";
+						$path.="<tr><td/><td>";
 					} else {
 						//End of path
 						$end=true;
@@ -296,27 +289,26 @@
 					$devList=$dev->GetDeviceLineage();
 					
 					//Device table
-					$path.="\n\t\t\t<table>\n\t\t\t\t<tr>\n\t\t\t\t\t<th colspan=2>";
-					
-					//cabinet
+                                        //Cabinet
 					$cab=new Cabinet();
 					$cab->CabinetID=$devList[sizeof($devList)]->Cabinet;
 					$cab->GetCabinet();
+					$path.="<table><tr><th colspan=2>";
 					$path.=__("Cabinet").": <a href=\"cabnavigator.php?cabinetid=$cab->CabinetID\">$cab->Location</a>";
-					$path.="</th>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td>U:{$devList[sizeof($devList)]->Position}</td>\n";
+					$path.="</th></tr><tr><td>U:{$devList[sizeof($devList)]->Position}</td>";
 					
 					//Lineage
 					$t=5;
 					for ($i=sizeof($devList); $i>1; $i--){
-						$path.=str_repeat("\t",$t++)."<td>\n";
-						$path.=str_repeat("\t",$t++)."<table>\n";
-						$path.=str_repeat("\t",$t++)."<tr>\n";
-						$path.=str_repeat("\t",$t--)."<th colspan=2>";
+						$path.="<td>";
+						$path.="<table>";
+						$path.="<tr>";
+						$path.="<th colspan=2>";
 						$path.="<a href=\"devices.php?DeviceID={$devList[$i]->DeviceID}\">{$devList[$i]->Label}</a>";
-						$path.="</th>\n";
-						$path.=str_repeat("\t",$t)."</tr>\n";
-						$path.=str_repeat("\t",$t++)."<tr>\n";
-						$path.=str_repeat("\t",$t)."<td>Slot:{$devList[$i-1]->Position}</td>\n";
+						$path.="</th>";
+						$path.="</tr>";
+						$path.="<tr>";
+						$path.="<td>Slot:{$devList[$i-1]->Position}</td>";
 					}
 					
 					//Device
@@ -324,33 +316,31 @@
 					$dp->PortNumber=abs($cp->PortNumber);
 					$dp->getPort();
 					$label=($dp->Label!='')?$dp->Label:abs($cp->PortNumber);
-					$path.=str_repeat("\t",$t--)."<td>".
-							"<a href=\"devices.php?DeviceID=$dev->DeviceID\">$dev->Label".
-							"</a><br>".__("Port").": $label</td>\n";
-					$path.=str_repeat("\t",$t--)."</tr>\n";
-					$path.=str_repeat("\t",$t--)."</table>\n";
+					$path.="<td><a href=\"devices.php?DeviceID=$dev->DeviceID\">$dev->Label</a><br>".__("Port").": $label</td>";
+					$path.="</tr>";
+					$path.="</table>";
 					
 					//ending device table
 					for ($i=sizeof($devList); $i>1; $i--){
-						$path.=str_repeat("\t",$t--)."</td>\n";
-						$path.=str_repeat("\t",$t--)."</tr>\n";
-						$path.=str_repeat("\t",$t--)."</table>\n";
-					}
-					
-					$path.="\t\t</td>";
+						$path.="</td>";
+						$path.="</tr>";
+						$path.="</table>";
+					}					
+					$path.="</td>";
 					
 					if ($elem_path==1 || $dev->DeviceType=="Patch Panel"){
 						//half hose
 						//Out connection type
-						$tipo_con=($cp->PortNumber>0)?"f":"r";
-						
-						$path.="\n\t\t<td class=\"$tipo_con-left\"></td>\n";
+						$tipo_con=($cp->PortNumber>0)?"f":"r";						
+						$path.="<td class=\"$tipo_con-left\"/>";
+                                                //$path.="<td class=\"connection-$tipo_con-3i\"/>";
+                                                //$path.="<td class=\"connection-$tipo_con-3i\"/>";
 					}
 					//next device, if exist
 					if ($cp->GotoNextDevice()) {
 						$elem_path++;
-						$form_eliminar.="<input type=\"hidden\" name=\"DeviceID[$elem_path]\" value=\"$cp->DeviceID\">\n";
-						$form_eliminar.="<input type=\"hidden\" name=\"PortNumber[$elem_path]\" value=\"$cp->PortNumber\">\n";
+						$form_eliminar.="<input type=\"hidden\" name=\"DeviceID[$elem_path]\" value=\"$cp->DeviceID\">";
+						$form_eliminar.="<input type=\"hidden\" name=\"PortNumber[$elem_path]\" value=\"$cp->PortNumber\">";
 						
 						$dev->DeviceID=$cp->DeviceID;
 						$dev->GetDevice();
@@ -359,21 +349,21 @@
 						$tipo_con=($cp->PortNumber>0)?"r":"f";
 						
 						//half hose
-						$path.="\n\t\t<td class=\"$tipo_con-right\"></td>\n";
+						$path.="<td class=\"$tipo_con-right\"></td>";
 						
 						//Out connection type
 						$tipo_con=($cp->PortNumber>0)?"f":"r";
 						
 						//Can I follow?
 						if ($dev->DeviceType=="Patch Panel"){
-							$path.="\n\t\t<td class=\"connection-$tipo_con-1\">";
+							$path.="<td class=\"connection-$tipo_con-1\">";
 							// I prepare row separation between patch rows
-							$conex="\t\t<td class=\"connection-$tipo_con-3\">&nbsp;</td>\n";
-							$conex.="\t\t<td class=\"connection-$tipo_con-2\">&nbsp;</td>\n\t<td></td></tr>\n";
+							//$conex="<td class=\"connection-$tipo_con-3i\"/>";
+							$conex.="<td class=\"connection-$tipo_con-2\"/><td/></tr>";
 						}
 						else{
-							$conex="\t\t<td></td>\t\t<td></td>\n\t<td></td></tr>";
-							$path.="\n\t\t<td>";
+							$conex="<td/><td/><td/></tr>";
+							$path.="<td>";
 						}
 					
 						//I get device Lineage (for multi level chassis)
@@ -381,27 +371,25 @@
 						$devList=$dev->GetDeviceLineage();
 						
 						//Device Table
-						$path.="\n\t\t\t<table>\n\t\t\t\t<tr>\n\t\t\t\t\t<th colspan=2>";
-						
-						//cabinet
+                                                //Cabinet
 						$cab=new Cabinet();
 						$cab->CabinetID=$devList[sizeof($devList)]->Cabinet;
 						$cab->GetCabinet();
+						$path.="<table><tr><th colspan=2>";
 						$path.=__("Cabinet").": <a href=\"cabnavigator.php?cabinetid=$cab->CabinetID\">$cab->Location</a>";
-						$path.="</th>\n\t\t\t\t</tr>\n\t\t\t\t<tr>\n\t\t\t\t\t<td>U:{$devList[sizeof($devList)]->Position}</td>\n";
+						$path.="</th></tr><tr><td>U:{$devList[sizeof($devList)]->Position}</td>";
 						
 						//lineage
-						$t=5;
 						for ($i=sizeof($devList); $i>1; $i--){
-							$path.=str_repeat("\t",$t++)."<td>\n";
-							$path.=str_repeat("\t",$t++)."<table>\n";
-							$path.=str_repeat("\t",$t++)."<tr>\n";
-							$path.=str_repeat("\t",$t--)."<th colspan=2>";
+							$path.="<td>";
+							$path.="<table>";
+							$path.="<tr>";
+							$path.="<th colspan=2>";
 							$path.="<a href=\"devices.php?DeviceID={$devList[$i]->DeviceID}\">".$devList[$i]->Label."</a>";
-							$path.="</th>\n";
-							$path.=str_repeat("\t",$t)."</tr>\n";
-							$path.=str_repeat("\t",$t++)."<tr>\n";
-							$path.=str_repeat("\t",$t)."<td>Slot:{$devList[$i-1]->Position}</td>\n";
+							$path.="</th>";
+							$path.="</tr>";
+							$path.="<tr>";
+							$path.="<td>Slot:{$devList[$i-1]->Position}</td>";
 						}
 						
 						//device
@@ -409,79 +397,75 @@
 						$dp->PortNumber=abs($cp->PortNumber);
 						$dp->getPort();
 						$label=($dp->Label!='')?$dp->Label:abs($cp->PortNumber);
-						$path.=str_repeat("\t",$t--)."<td>".
-								"<a href=\"devices.php?DeviceID=$dev->DeviceID\">$dev->Label".
-								"</a><br>".__("Port").": $label</td>\n";
-						$path.=str_repeat("\t",$t--)."</tr>\n";
+						$path.="<td><a href=\"devices.php?DeviceID=$dev->DeviceID\">$dev->Label</a><br>".__("Port").": $label</td></tr>";
 						
 						//ending device table
 						for ($i=sizeof($devList); $i>1; $i--){
-							$path.=str_repeat("\t",$t--)."</table>\n";
-							$path.=str_repeat("\t",$t--)."</td>\n";
-							$path.=str_repeat("\t",$t--)."</tr>\n";
+							$path.="</table>";
+							$path.="</td>";
+							$path.="</tr>";
 						}
 						
 						if ($cp->PortNumber>0){
-							$t++;
-							$path.=str_repeat("\t",$t++)."<tr>\n";
-							$path.=str_repeat("\t",$t)."<td colspan=2 class=\"base-f\">\n";
-							$path.=str_repeat("\t",$t--)."</td>\n";
-							$path.=str_repeat("\t",$t--)."</tr>\n";
+							$path.="<tr>";
+							$path.="<td colspan=2 class=\"base-f\"/>";
+							$path.="</tr>";
 						}
-						$path.=str_repeat("\t",$t--)."</table>\n";
+						$path.="</table>";
 						
 						//ending row
-						$path.="\t\t</td>\n\t\t<td>&nbsp;&nbsp;&nbsp;</td>\n\t</tr>\n";
+						$path.="</td><td/></tr>\n";
 	
 						if ($cp->GotoNextDevice()) {
 							$tipo_con=($cp->PortNumber>0)?"r":"f";  //In connection type
 	
 							//row separation between patch rows: draw the connection between panels
-							$path.="\t<tr>\n\t\t<td></td><td class=\"connection-$tipo_con-4\">&nbsp;</td>\n"; 
-							$path.="\t\t<td class=\"connection-$tipo_con-3\">&nbsp;</td>\n";
+							$path.="<tr><td/><td class=\"connection-$tipo_con-4\"/>"; 
+							$path.="<td class=\"connection-$tipo_con-3\"/>";
+                                                        //$path.="<td class=\"connection-$tipo_con-3i\"/>";
+                                                        //$path.="<td class=\"connection-$tipo_con-3i\"/>";
 							$path.=$conex;
-							$path.="\n<tr>\n\t\t<td>&nbsp;&nbsp;&nbsp;</td>\n\t\t<td>";
+							$path.="<tr><td/><td>";
 						} else {
 							//End of path
-							$path.="\t<tr>\n\t\t<td></td><td>&nbsp;</td>\n";
-							$path.="\t\t<td>&nbsp;</td>\n";
-							$path.=$conex;
+							//$path.="\t<tr colspan=8></tr>";
+							//$path.=$conex;
 							$end=true;
 						}
 					}else {
 						//End of path
-						$path.="\n\t\t<td></td>\n\t\t<td></td>\n\t\t<td>&nbsp;&nbsp;&nbsp;</td>\n\t</tr>\n";
+						$path.="<tdcolspan=6/></tr>\n";
 						$end=true;
 					}
 				}
 			}
 			//key
-			$path.="\t<tr>\n\t\t<td colspan=6>&nbsp;</td>\n\t</tr>";
-			$path.="\t<tr>\n";
-			$path.="\t\t<td class=\"right\" colspan=2><img src=\"images/leyendaf.png\" alt=\"\"></td>\n";
-			$path.="\t\t<td class=\"left\" colspan=4>&nbsp;&nbsp;".__("Front Connection")."</td>\n";
-			$path.="\t</tr>\n";
-			$path.="\t<tr>\n";
-			$path.="\t\t<td class=\"right\" colspan=2><img src=\"images/leyendar.png\" alt=\"\"></td>\n";
-			$path.="\t\t<td class=\"left\" colspan=4>&nbsp;&nbsp;".__("Rear Connection")."</td>\n";
-			$path.="\t</tr>\n";
+			$path.="<tr><td colspan=6/></tr>";
+			$path.="<tr>";
+			$path.="<td class=\"right\" colspan=2><img src=\"images/leyendaf.png\" alt=\"\"></td>";
+			$path.="<td class=\"left\" colspan=6>&nbsp;&nbsp;".__("Front Connection")."</td>";
+			$path.="</tr>";
+			$path.="<tr>";
+			$path.="<td class=\"right\" colspan=2><img src=\"images/leyendar.png\" alt=\"\"></td>";
+			$path.="<td class=\"left\" colspan=6>&nbsp;&nbsp;".__("Rear Connection")."</td>";
+			$path.="</tr>";
 			
 			//End of path table
-			$path.="\t<tr>\n\t\t<td colspan=6>&nbsp;</td>\n\t</tr></table></div>";
+			$path.="<tr><td colspan=6></tr></table></div>";
 		
 			// need to add an additional check for permission here if they can write
 			if(!isset($_GET['pathonly'])){
 				//Delete Form
-				$path.= "<form method=\"POST\">\n";
-				$path.= "<br>\n"; 
-				$path.= "<div>\n";
+				$path.= "<form method=\"POST\">";
+				$path.= "<br>"; 
+				$path.= "<div>";
 				//PATH INFO
 				$path.=$form_eliminar;	
-				$path.= "	<button type=\"submit\" name=\"action\" value=\"delete\">".__("Delete front connections in DataBase")."</button>\n";
-				$path.= "</div>\n";
-				$path.= "</form>\n";
+				$path.= "<button type=\"submit\" name=\"action\" value=\"delete\">".__("Delete front connections in DataBase")."</button>";
+				$path.= "</div>";
+				$path.= "</form>n";
 			}
-			$path.= "</div>\n";
+			$path.= "</div>";
 		}	
 	}
 
