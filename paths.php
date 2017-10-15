@@ -77,7 +77,6 @@
 			
 			$cp->DeviceID=intval($_REQUEST['deviceid']);
 			$cp->PortNumber=intval($_REQUEST['portnumber']);
-                        $cp->Notes = $_REQUEST['portnotes'];
 			$cp->DeviceType=$dev->DeviceType;
 			$cp->Front=true;
 				
@@ -341,8 +340,8 @@
                                                 // Mark label table
                                                 $path.="<td>"; 
                                                 $path.="<table>"; 
-                                                $path.="<tr><td>".Label:</td></tr>";
-                                                $path.="<tr><td>$dp->Notes</td></tr>"; 
+                                                $path.="<tr><td>"._("Label").":</td></tr>";
+                                                $path.="<tr><td>$dp->Notes</td></tr>"; // TODO: add marking to connection!
                                                 $path.="</table>"; 
                                                 $path.="</td>"; 
 					}
@@ -367,7 +366,7 @@
 						if ($dev->DeviceType=="Patch Panel"){
 							$path.="<td class=\"connection-$tipo_con-1\">";
 							// I prepare row separation between patch rows
-							$conex.="<td/><td/><td class=\"connection-$tipo_con-2\"/><td/></tr>";
+							$conex="<td/><td/><td class=\"connection-$tipo_con-2\"/><td/></tr>";
 						}
 						else{
 							$conex="<td/><td/><td/><td/></tr>";
