@@ -2366,6 +2366,7 @@ function LameLogDisplay(){
 			this.rnotes      = this.element.find('div[id^=rn]');
 			this.porttype    = this.element.find('div[id^=mt]');
 			this.portcolor   = this.element.find('div[id^=cc]');
+                        this.portmark    = this.element.find('div[id^=pm]');
 
 			// Create a blank row for controls on a patch panel
 			this.btnrow      = $('<div>');
@@ -2422,6 +2423,7 @@ function LameLogDisplay(){
 			row.portname.html('<input type="text" style="min-width: 60px;" value="'+row.portname.text()+'">');
 			row.getmediatypes();
 			row.getcolortypes();
+                        row.portmark.html('<input type="text" style="min-width: 200px;" value="'+row.portmark.text()+'">');
 
 			// rear panel edit
 			if(portrights.admin && row.rdevice.length>0){
@@ -2692,7 +2694,7 @@ function LameLogDisplay(){
 			var device=row.cdevice;
 			var deviceport=row.cdeviceport;
 			var notes=row.cnotes;
-
+                        var portmark=row.portmark;
 			var check=$(e.target.parentElement).data('rear');
 
 			// If this is any type of device other than a patch panel the save is straight forward
@@ -2702,6 +2704,7 @@ function LameLogDisplay(){
 				device=row.rdevice;
 				deviceport=row.rdeviceport;
 				notes=row.rnotes;
+                                portmark="";
 			}
 
 			// save the port
@@ -2716,7 +2719,8 @@ function LameLogDisplay(){
 					cdeviceport: deviceport.children('select').val(),
 					cnotes: notes.children('input').val(),
 					porttype: (row.porttype.children('select').length==0)?row.porttype.data('default'):row.porttype.children('select').val(),
-					portcolor: (row.portcolor.length==0)?row.porttype.data('color'):row.portcolor.children('select').val()
+					portcolor: (row.portcolor.length==0)?row.porttype.data('color'):row.portcolor.children('select').val(),
+                                        portmark: portmark.children('input').val()
 				}).done(function(data){
 					if(data.trim()==1){
 						row.checkredraw(e);
@@ -2789,6 +2793,7 @@ function LameLogDisplay(){
 					data.ConnectedPortLabel=(data.ConnectedPortLabel==null)?'':data.ConnectedPortLabel;
 					row.cdeviceport.html('<a href="paths.php?deviceid='+data.ConnectedDeviceID+'&portnumber='+data.ConnectedPort+'">'+data.ConnectedPortLabel+'</a>').data('default',data.ConnectedPort);
 					row.cnotes.html(data.Notes).data('default',data.Notes);
+                                        row.portmark.html(data.Marking).data('default',data.Marking);
 					row.porttype.html(data.MediaName).data('default',data.MediaID);
 					row.portcolor.html(data.ColorName).data('default',data.ColorID);
 					$(row.element[0]).children('div ~ div:not([id^=sp])').removeAttr('style');

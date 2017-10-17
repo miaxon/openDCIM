@@ -282,11 +282,12 @@
 	$codeList=ColorCoding::GetCodeList();
 	if(count($codeList)>0){
 		foreach($codeList as $cc){
+                    $colorName = ColorCoding::GetColorName($cc->ColorID);
 			$colorselector.='<option value="'.$cc->ColorID.'">'.$cc->Name.'</option>';
 			$cablecolors.='<div>
 					<div><img src="images/del.gif"></div>
 					<div><input type="text" name="colorcode[]" data='.$cc->ColorID.' value="'.$cc->Name.'"></div>
-					<div><input type="text" name="ccdefaulttext[]" value="'.$cc->DefaultNote.'"></div>
+					<div><input type="text" style="background:'.$colorName.'" size="70" name="ccdefaulttext[]" value="'.$cc->DefaultNote.'"></div>
 				</div>';
 		}
 	}
@@ -298,9 +299,10 @@
 
 	if(count($mediaList)>0){
 		foreach($mediaList as $mt){
+                        $colorName = ColorCoding::GetColorName($mt->ColorID);
 			$mediatypes.='<div>
 					<div><img src="images/del.gif"></div>
-					<div><input type="text" name="mediatype[]" data='.$mt->MediaID.' value="'.$mt->MediaType.'"></div>
+					<div><input type="text" style="background:'.$colorName.'" name="mediatype[]" data='.$mt->MediaID.' value="'.$mt->MediaType.'"></div>
 					<div><select name="mediacolorcode[]"><option value=""></option>';
 			foreach($codeList as $cc){
 				$selected=($mt->ColorID==$cc->ColorID)?' selected':'';

@@ -104,7 +104,6 @@
 				$cp=new ConnectionPath();
 				$cp->DeviceID=intval($_POST['devid']);
 				$cp->PortNumber=intval($_POST['port']);
-                                $cp->Notes = "bbbb";
 				//label of devid
 				$label=$devList[$cp->DeviceID]->Label;
 				//search the begining of the path
@@ -125,7 +124,6 @@
 					$keys=array_keys($devList);
 					$cp->DeviceID=$keys[0];
 					$cp->PortNumber=intval($_POST['port']);
-                                        $cp->Notes = "aaaaaaaaa";
 					//label of devid
 					$label=$devList[$cp->DeviceID]->Label;
 					
@@ -139,7 +137,7 @@
 			$pathid=$label."[".__("Port").": ".intval($_POST['port'])."]";
 		}
 		
-		//Search by path identifier (in "notes" field)
+		//Search by path identifier (in "Marking" field)
 		elseif(isset($_POST['pathid']) && $_POST['pathid']!='' && $_POST['action']=="PathIdSearch" 
 			|| isset($_GET['pathid']) && $_GET['pathid']!=''){
 			$status="";
@@ -152,7 +150,7 @@
 			// No SQL injection for joo
 			$pathid=sanitize($pathid);
 			
-			$sql="SELECT DeviceID, PortNumber FROM fac_Ports WHERE Notes=\"$pathid\"";
+			$sql="SELECT DeviceID, PortNumber FROM fac_Ports WHERE Marking=\"$pathid\"";
 
 			$result = $dbh->prepare($sql);
 			$result->execute();
@@ -165,7 +163,6 @@
 				$cp=new ConnectionPath();
 				$cp->DeviceID=$row["DeviceID"];
 				$cp->PortNumber=$row["PortNumber"];
-				$cp->Notes = $pathid;
 				if (!$cp->GotoHeadDevice()){
 					$status="<blink>".__("There is a loop in this port")."</blink>";
 				} 
@@ -341,7 +338,7 @@
                                                 $path.="<td>"; 
                                                 $path.="<table>"; 
                                                 $path.="<tr><td>"._("Label").":</td></tr>";
-                                                $path.="<tr><td>$dp->Notes</td></tr>"; // TODO: add marking to connection!
+                                                $path.="<tr><td>$dp->Marking</td></tr>"; // TODO: add marking to connection!
                                                 $path.="</table>"; 
                                                 $path.="</td>"; 
 					}

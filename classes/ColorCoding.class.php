@@ -108,6 +108,17 @@ class ColorCoding {
 		return true;
 	}
 	
+        static function GetColorName($colorid) {
+            global $dbh;
+		
+		$sql="SELECT Name FROM fac_ColorCoding WHERE ColorID=$colorid;";
+		
+		$colorName="#FFFFFF";
+		foreach($dbh->query($sql) as $row){
+                    $colorName = $row["Name"];
+		}		
+		return $colorName;
+        }
 	
 	static function GetCodeList() {
 		global $dbh;

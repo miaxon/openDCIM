@@ -261,6 +261,7 @@
 				$dp->MediaID=$_POST['porttype'];
 				$dp->ColorID=$_POST['portcolor'];
 				$dp->Notes=$_POST['cnotes'];
+                                $dp->Marking=$_POST['portmark'];
 				$dp->ConnectedDeviceID=$_POST['cdevice'];
 				$dp->ConnectedPort=$_POST['cdeviceport'];
 
@@ -369,6 +370,7 @@
 
 			$mt=MediaTypes::GetMediaTypeList();
 			$cc=ColorCoding::GetCodeList();
+                        $marking=$dp->Marking;
 			$dp->MediaName=(isset($mt[$dp->MediaID]))?$mt[$dp->MediaID]->MediaType:'';
 			$dp->ColorName=(isset($cc[$dp->ColorID]))?$cc[$dp->ColorID]->Name:'';
 			$dev->DeviceID=$dp->ConnectedDeviceID;
@@ -2346,10 +2348,11 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 				<div>".__("Device Port")."</div>
 				<div>".__("Notes")."</div>";
 		if($dev->DeviceType=='Switch'){print "\t\t\t\t<div id=\"st\">".__("Status")."</div>";}
-		print "\t\t\t\t<div id=\"mt\">".__("Media Type")."</div>
-			<div id=\"cc\">".__("Color Code")."</div>
+		print "\t\t\t\t<div id=\"mt\">".__("Media Type")."</div>			
+                        <div>".__("Marking")."</div>
+                        <div id=\"cc\">".__("Color Code")."</div>
 			</div>\n";
-
+                
 		foreach($portList as $i => $port){
 			$tmpDev=new Device();
 			$tmpDev->DeviceID=$port->ConnectedDeviceID;
@@ -2374,7 +2377,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 
 			$mt=(isset($mediaTypes[$port->MediaID]))?$mediaTypes[$port->MediaID]->MediaType:'';
 			$cc=(isset($colorCodes[$port->ColorID]))?$colorCodes[$port->ColorID]->Name:'';
-
+    
 			if($dev->DeviceType=='Switch'){$linkList[$i]=(isset($linkList[$i]))?$linkList[$i]:'err';}
 
 			// the data attribute is used to store the previous value of the connection
@@ -2386,6 +2389,7 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 					<div id=\"n$i\" data-default=\"$port->Notes\">$port->Notes</div>";
 			if($dev->DeviceType=='Switch'){print "\t\t\t\t<div id=\"st$i\"><span class=\"ui-icon status {$linkList[$i]}\"></span></div>";}
 			print "\t\t\t\t<div id=\"mt$i\" data-default=$port->MediaID>$mt</div>
+                                        <div id=\"pm$i\" data-default=$port->Marking>$port->Marking</div>
 					<div id=\"cc$i\" data-default=$port->ColorID>$cc</div>
 				</div>\n";
 		}
@@ -2393,7 +2397,17 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 	}
 
 	if($dev->DeviceType=='Patch Panel'){
-		print "\n\t<div>\n\t\t<div><a name=\"net\">".__("Connections")."</a></div>\n\t\t<div>\n\t\t\t<div class=\"table border patchpanel\">\n\t\t\t\t<div><div>".__("Front")."</div><div>".__("Device Port")."</div><div>".__("Notes")."</div><div id=\"pp\">".__("Patch Port")."</div><div id=\"mt\">".__("Media Type")."</div><div id=\"rear\">".__("Back")."</div><div>".__("Device Port")."</div><div>".__("Notes")."</div></div>\n";
+		print "\n\t<div>\n\t\t<div><a name=\"net\">".__("Connections")."</a></div>"
+                        . "\n\t\t<div>\n\t\t\t<div class=\"table border patchpanel\">\n\t\t\t\t<div>"
+                        . "<div>".__("Front")."</div>"
+                        . "<div>".__("Device Port")."</div>"
+                        . "<div>".__("Notes")."</div>"
+                        . "<div>".__("Marking")."</div>"
+                        . "<div id=\"pp\">".__("Patch Port")."</div>"
+                        . "<div id=\"mt\">".__("Media Type")."</div>"
+                        . "<div id=\"rear\">".__("Back")."</div>"
+                        . "<div>".__("Device Port")."</div>"
+                        . "<div>".__("Notes")."</div></div>\n";
 		for($n=0; $n< sizeof($portList)/2; $n++){
 			$i = $n + 1;	// The "port number" starting at 1
 			$frontDev=new Device();
@@ -2436,10 +2450,12 @@ $connectioncontrols.=($dev->DeviceID>0 && !empty($portList))?'
 					<div id=\"fd$i\" data-default=$frontDev->DeviceID><a href=\"devices.php?DeviceID=$frontDev->DeviceID\">$frontDev->Label</a></div>
 					<div id=\"fp$i\" data-default={$portList[$i]->ConnectedPort}><a href=\"paths.php?deviceid=$frontDev->DeviceID&portnumber={$portList[$i]->ConnectedPort}\">$fp</a></div>
 					<div id=\"fn$i\" data-default=\"{$portList[$i]->Notes}\">{$portList[$i]->Notes}</div>
+                                        <div id=\"pm$i\" data-default=\"{$portList[$i]->Marking}\">{$portList[$i]->Marking}</div>
 					<div id=\"pp$i\">{$portList[$i]->Label}</div>
 					<div id=\"mt$i\" data-default={$portList[$i]->MediaID} data-color={$portList[$i]->ColorID}>$mt</div>
 					<div id=\"rd$i\" data-default=$rearDev->DeviceID><a href=\"devices.php?DeviceID=$rearDev->DeviceID\">$rearDev->Label</a></div>
 					<div id=\"rp$i\" data-default={$portList[-$i]->ConnectedPort}><a href=\"paths.php?deviceid=$rearDev->DeviceID&portnumber={$portList[-$i]->ConnectedPort}\">$rp</a></div>
+                                        
 					<div id=\"rn$i\" data-default=\"{$portList[-$i]->Notes}\">{$portList[-$i]->Notes}</div>
 				</div>";
 		}

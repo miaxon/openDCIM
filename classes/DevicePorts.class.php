@@ -32,6 +32,7 @@ class DevicePorts {
 	var $ConnectedDeviceID;
 	var $ConnectedPort;
 	var $Notes;
+        var $Marking;
 	
 	function MakeSafe() {
 		$this->DeviceID=intval($this->DeviceID);
@@ -42,7 +43,7 @@ class DevicePorts {
 		$this->ConnectedDeviceID=intval($this->ConnectedDeviceID);
 		$this->ConnectedPort=intval($this->ConnectedPort);
 		$this->Notes=sanitize($this->Notes);
-
+                $this->Marking = sanitize($this->Marking);
 		if($this->ConnectedDeviceID==0 || $this->ConnectedPort==0){
 			$this->ConnectedDeviceID="NULL";
 			$this->ConnectedPort="NULL";
@@ -52,6 +53,7 @@ class DevicePorts {
 	function MakeDisplay(){
 		$this->Label=stripslashes(trim($this->Label));
 		$this->Notes=stripslashes(trim($this->Notes));
+                $this->Marking = stripslashes(trim($this->Marking));
 	}
 
 	static function RowToObject($dbRow){
@@ -64,7 +66,7 @@ class DevicePorts {
 		$dp->ConnectedDeviceID=$dbRow['ConnectedDeviceID'];
 		$dp->ConnectedPort=$dbRow['ConnectedPort'];
 		$dp->Notes=$dbRow['Notes'];
-
+                $dp->Marking=$dbRow['Marking'];
 		$dp->MakeDisplay();
 
 		return $dp;
@@ -124,7 +126,7 @@ class DevicePorts {
 		$sql="INSERT INTO fac_Ports SET DeviceID=$this->DeviceID, PortNumber=$this->PortNumber, 
 			Label=\"$this->Label\", MediaID=$this->MediaID, ColorID=$this->ColorID, 
 			ConnectedDeviceID=$this->ConnectedDeviceID, ConnectedPort=$this->ConnectedPort, 
-			Notes=\"$this->Notes\";";
+			Notes=\"$this->Notes\", Marking=\"$this->Marking\";";
 			
 		if(!$dbh->query($sql) && !$ignore_errors){
 			$info=$dbh->errorInfo();
@@ -292,6 +294,7 @@ class DevicePorts {
 				$tmpport->ConnectedDeviceID=$this->DeviceID;
 				$tmpport->ConnectedPort=$this->PortNumber;
 				$tmpport->Notes=$this->Notes;
+                                $tmpport->Marking=$this->Marking;
 				$tmpport->MediaID=$this->MediaID;
 				$tmpport->ColorID=$this->ColorID;
 				$tmpport->updatePort(true);
@@ -302,7 +305,7 @@ class DevicePorts {
 		// update port
 		$sql="UPDATE fac_Ports SET MediaID=$this->MediaID, ColorID=$this->ColorID, 
 			ConnectedDeviceID=$this->ConnectedDeviceID, Label=\"$this->Label\", 
-			ConnectedPort=$this->ConnectedPort, Notes=\"$this->Notes\" 
+			ConnectedPort=$this->ConnectedPort, Notes=\"$this->Notes\", Marking=\"$this->Marking\"  
 			WHERE DeviceID=$this->DeviceID AND PortNumber=$this->PortNumber;";
 
 		if(!$dbh->query($sql)){
@@ -373,10 +376,10 @@ class DevicePorts {
 		$port2->MakeSafe();
 
 		$sql="UPDATE fac_Ports SET ConnectedDeviceID=$port2->DeviceID, 
-			ConnectedPort=$port2->PortNumber, Notes=\"$port2->Notes\" WHERE 
+			ConnectedPort=$port2->PortNumber, Notes=\"$port2->Notes\", Marking=\"$port2->Marking\" WHERE 
 			DeviceID=$port1->DeviceID AND PortNumber=$port1->PortNumber; UPDATE fac_Ports 
 			SET ConnectedDeviceID=$port1->DeviceID, ConnectedPort=$port1->PortNumber, 
-			Notes=\"$port1->Notes\" WHERE DeviceID=$port2->DeviceID AND 
+			Notes=\"$port1->Notes\", Marking=\"$port1->Marking\" WHERE DeviceID=$port2->DeviceID AND 
 			PortNumber=$port2->PortNumber;";
 
 		if(!$dbh->exec($sql)){
@@ -444,7 +447,7 @@ class DevicePorts {
 		// Check the user's permissions to modify this device
 		if($dev->Rights!='Write'){return false;}
 
-		$sql="UPDATE fac_Ports SET ConnectedDeviceID=NULL, ConnectedPort=NULL, Notes='' WHERE
+		$sql="UPDATE fac_Ports SET ConnectedDeviceID=NULL, ConnectedPort=NULL, Notes='', Marking='' WHERE
 			DeviceID=$dev->DeviceID OR ConnectedDeviceID=$dev->DeviceID;";
 
 		$dbh->exec($sql); // don't need to log if this fails

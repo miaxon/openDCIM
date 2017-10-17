@@ -11,13 +11,13 @@ class DeviceType {
             }
 
 	function MakeSafe(){
-		$this->TypeId=intval($this->TypeId);
+		$this->TypeID=intval($this->TypeID);
 		$this->Type=sanitize($this->Type);
 	}
 
 	static function RowToObject($row){
 		$ds=new DeviceType();
-		$ds->TypeId=$row["TypeId"];
+		$ds->TypeID=$row["TypeID"];
 		$ds->Type=$row["Type"];
 
 		return $ds;
@@ -47,11 +47,10 @@ class DeviceType {
 
 		$this->MakeSafe();
 
-		$sql="INSERT INTO fac_DeviceTypes SET Type=\"$this->Type\", 
-			ColorCode=\"$this->ColorCode\"";
+		$sql="INSERT INTO fac_DeviceTypes SET Type=\"$this->Type\"";
 	
 		if($this->exec($sql)){
-			$this->TypeId=$dbh->lastInsertId();
+			$this->TypeID=$dbh->lastInsertId();
 		}else{
 			$info=$dbh->errorInfo();
 
@@ -59,13 +58,13 @@ class DeviceType {
 			return false;
 		}
 		
-		return $this->TypeId;
+		return $this->TypeID;
 	}
 
 	function getType() {
 		$this->MakeSafe();
 
-		$sql="SELECT * FROM fac_DeviceTypes WHERE TypeId=$this->TypeId;";
+		$sql="SELECT * FROM fac_DeviceTypes WHERE TypeID=$this->TypeID;";
 
         if($row=$this->query($sql)->fetch()){
             foreach(DeviceType::RowToObject($row) as $prop=>$value){
@@ -74,9 +73,9 @@ class DeviceType {
 
             return true;
         }else{
-            // Kick back a blank record if the TypeId was not found
+            // Kick back a blank record if the TypeID was not found
             foreach($this as $prop=>$value){
-                if($prop!='TypeId'){
+                if($prop!='TypeID'){
                     $this->$prop = '';
                 }
             }
@@ -125,13 +124,12 @@ class DeviceType {
 	function updateType() {
 		$this->MakeSafe();
 
-		$oldstatus=new DeviceType($this->TypeId);
+		$oldstatus=new DeviceType($this->TypeID);
 		$oldstatus->getType();
 
-		$sql="UPDATE fac_DeviceTypes SET Type=\"$this->Type\", 
-			ColorCode=\"$this->ColorCode\" WHERE TypeId=\"$this->TypeId\";";
+		$sql="UPDATE fac_DeviceTypes SET Type=\"$this->Type\" WHERE TypeID=\"$this->TypeID\";";
 
-		if($this->TypeId==0){
+		if($this->TypeID==0){
 			return false;
 		}else{
 			(class_exists('LogActions'))?LogActions::LogThis($this,$oldstatus):'';
@@ -147,8 +145,8 @@ class DeviceType {
 		// Both of which are reserved, so they can't be removed unless you go to the db directly, in which case, you deserve a broken system
 
 		// Also, don't go trying to remove a status that doesn't exist
-		$ds=new DeviceType($this->TypeId);
-		if(!$ds->getType() || $ds->Type == "Reserved" || $ds->Type == "Disposed" ) {
+		$ds=new DeviceType($this->TypeID);
+		if(!$ds->getType() ) {
 			return false;
 		}
 
@@ -158,8 +156,8 @@ class DeviceType {
 		$dList=$srchDev->Search();
 
 		if(count($dList)==0){
-			$st=$this->prepare( "delete from fac_DeviceTypes where TypeId=:TypeId" );
-			return $st->execute( array( ":TypeId"=>$this->TypeId ));
+			$st=$this->prepare( "delete from fac_DeviceTypes where TypeID=:TypeID" );
+			return $st->execute( array( ":TypeID"=>$this->TypeID ));
 		}
 
 		return false;
