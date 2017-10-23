@@ -233,7 +233,20 @@ class DevicePorts {
 			return true;
 		}
 	}
+        function updateMarking(){
+		global $dbh;
 
+		$this->MakeSafe();
+
+		$sql="UPDATE fac_Ports SET Marking=\"$this->Marking\" WHERE 
+			DeviceID=$this->DeviceID AND PortNumber=$this->PortNumber;";
+
+		if(!$dbh->query($sql)){
+			return false;
+		}else{
+			return true;
+		}
+	}
 	function updatePort($fasttrack=false) {
 		global $dbh;
 
@@ -277,6 +290,7 @@ class DevicePorts {
 
 			// Quick sanity check so we aren't depending on the user
 			$this->Label=($this->Label=="")?$this->PortNumber:$this->Label;
+                        $this->Marking=($this->Marking=="")?"":$this->Marking;
 
 			// clear previous connection
 			$oldport->removeConnection();
@@ -324,7 +338,9 @@ class DevicePorts {
 			$pport->PortNumber=-$this->PortNumber;
 			$pport->getPort();
 			$pport->Label=$this->Label;
+                        $pport->Marking=$this->Marking;
 			$pport->updateLabel();
+                        $pport->updateMarking();
 		}
 
 		// two logs, because we probably modified two devices

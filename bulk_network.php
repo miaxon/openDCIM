@@ -78,7 +78,7 @@
 
     $fieldNum = 1;
 
-    foreach ( array( "SourceDeviceID"=>"The key value to indicate the existing device the connection originates from.", "SourcePort"=>"The name of the existing port for the origination of the connection.", "TargetDeviceID"=>"The key value to indicate the existing device the connection terminates at.", "TargetPort"=>"The name of the existing port for the termination of the connection.", "MediaType"=>"Optional, but if specified the name must match an existing Media Type in the openDCIM installation.", "ColorCode"=>"Optional, but if specified the name must match an existing Color name in the openDCIM installation.", "Notes"=>"Optional, free form text to add to the Notes field for the connection." ) as $fieldName=>$helpText ) {
+    foreach ( array( "SourceDeviceID"=>"The key value to indicate the existing device the connection originates from.", "SourcePort"=>"The name of the existing port for the origination of the connection.", "TargetDeviceID"=>"The key value to indicate the existing device the connection terminates at.", "TargetPort"=>"The name of the existing port for the termination of the connection.", "MediaType"=>"Optional, but if specified the name must match an existing Media Type in the openDCIM installation.", "ColorCode"=>"Optional, but if specified the name must match an existing Color name in the openDCIM installation.", "Notes"=>"Optional, free form text to add to the Notes field for the connection.", "Marking"=>"Optional, free form text to add to the Marking field for the connection." ) as $fieldName=>$helpText ) {
       $content .= '<div>
                     <div><span title="' . __($helpText) . '">' . __($fieldName) . '</span>: </div><div><select name="' . $fieldName . '">';
       for ( $n = 0; $n < sizeof( $fieldList ); $n++ ) {
@@ -127,7 +127,7 @@
     $errors = false;
 
     $sheet = $objXL->getSheet(0);
-    $highestRow = $sheet->getHighestRow();
+    $highestRow = $sheet->getHighestRow("A");
 
     // Make some quick arrays of the MediaType and ColorCoding tables - they are small and can easily fit in memory
     $st = $dbh->prepare( "select * from fac_ColorCoding" );
@@ -146,7 +146,7 @@
 
     // Also make sure we start with an empty string to display
     $content = "";
-    $fields = array( "SourceDeviceID", "SourcePort", "TargetDeviceID", "TargetPort", "MediaType", "ColorCode", "Notes" );
+    $fields = array( "SourceDeviceID", "SourcePort", "TargetDeviceID", "TargetPort", "MediaType", "ColorCode", "Notes", "Marking" );
 
     for ( $n = 2; $n <= $highestRow; $n++ ) {
       $rowError = false;
@@ -217,7 +217,10 @@
        *  Section for looking up the SourcePort by name and setting the true PortNumber in the devPort variable
        *
        */
-      $st = $dbh->prepare( "select count(*) as TotalMatches, Label, PortNumber from fac_Ports where DeviceID=:DeviceID and PortNumber>0 and ucase(Label)=ucase(:SourcePort)" );
+      
+      $portrear = ($row["Marking"]=="rear")?"<":">";// for rear patchpanel connections
+
+      $st = $dbh->prepare( "select count(*) as TotalMatches, Label, PortNumber from fac_Ports where DeviceID=:DeviceID and PortNumber".$portrear."0 and ucase(Label)=ucase(:SourcePort)" );
       $st->execute( array( ":DeviceID"=>$devPort->DeviceID, ":SourcePort"=>$row["SourcePort"] ));
       if ( ! $val = $st->fetch() ) {
         $info = $dbh->errorInfo();
@@ -238,7 +241,7 @@
        *  Limits to positive port numbers so that you can match Patch Panel frontside ports
        *
        */
-      $st = $dbh->prepare( "select count(*) as TotalMatches, Label, PortNumber from fac_Ports where DeviceID=:DeviceID and PortNumber>0 and ucase(Label)=ucase(:TargetPort)" );
+      $st = $dbh->prepare( "select count(*) as TotalMatches, Label, PortNumber from fac_Ports where DeviceID=:DeviceID and PortNumber".$portrear."0 and ucase(Label)=ucase(:TargetPort)" );
       $st->execute( array( ":DeviceID"=>$devPort->ConnectedDeviceID, ":TargetPort"=>$row["TargetPort"] ));
       if ( ! $val = $st->fetch() ) {
         $info = $dbh->errorInfo();
@@ -254,14 +257,17 @@
 
       // Do not fail if the Color Code or Media Type are not defined for the site.
       if ( $row["MediaType"] != "" ) {
+          if($row["Marking"]!="rear")
         $devPort->MediaID = @$media[strtoupper($row["MediaType"])];
       }
 
       if ( $row["ColorCode"] != "" ) {
+          if($row["Marking"]!="rear")
         $devPort->ColorID = @$colors[strtoupper($row["ColorCode"])];
       }
 
       $devPort->Notes = $row["Notes"];
+      $devPort->Marking = ($row["Marking"]=="rear")?"":$row["Marking"];
 
       if ( ! $rowError ) {
         if ( ! $devPort->updatePort() ) {
