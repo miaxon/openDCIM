@@ -163,8 +163,7 @@
           }
         }
 
-        if($row[$fname] == "")
-            continue;
+ 
         // Have to do this part by hand because some fields are actually context dependent upon others
         $values["DataCenterID"][] = $row["DataCenterID"];
         $tmpCab["DataCenterID"] = $row["DataCenterID"];
@@ -206,7 +205,7 @@
         $st = $dbh->prepare( "select CabinetID from fac_Cabinet where ucase(Location)=ucase( :Location ) and DataCenterID in (select DataCenterID from fac_DataCenter where ucase(Name)=ucase( :DataCenter ))" );
         foreach( $values["Cabinet"] as $row ) {
           $st->execute( array( ":Location"=>$row["Cabinet"], ":DataCenter"=>$row["DataCenterID"] ));
-          if ( ! $row = $st->fetch()) {
+          if ( ! $st->fetch()) {
             $valid = false;
             $tmpCon .= "<li>" . __("Cabinet") . ": " . $row["DataCenterID"] . " - " . $row["Cabinet"];
           }
